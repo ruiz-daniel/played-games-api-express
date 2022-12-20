@@ -9,20 +9,22 @@ const crypto = require('crypto')
  */
 module.exports.handler = {
   async get() {
-    const result = userModel.find()
+    const result = userModel.find({}, { password: 0 })
     return result
   },
   async login(username, password) {
-    let result = await userModel.findOne({
-      username: username,
-      password: getHashedPassword(password),
-    })
+    let result = await userModel
+      .findOne(
+        {
+          username: username,
+          password: getHashedPassword(password),
+        },
+        { password: 0 },
+      )
+      .catch((error) => {
+        throw new Error('Invalid username or password')
+      })
 
-    if (result?._id) {
-      result = result.toJSON()
-    } else {
-      throw new Error('Invalid username or password')
-    }
     return result
   },
   async register(user) {
@@ -52,16 +54,17 @@ module.exports.handler = {
       })
     if (!result?._id) {
       throw new Error('User not found')
+    } else if (result?._id) {
+      result = result.toJSON()
     }
     return result
   },
   async delete(id) {
-    let result = await userModel.deleteOne({ _id: id })
-    if (!result?._id) {
-      throw new Error('User not found')
-    } else {
-      result = result.toJSON()
-    }
+    let result = await userModel
+      .deleteOne({ _id: id })
+      .catch((error) => {
+        throw new Error('User not found')
+      })
     return result
   },
 }
