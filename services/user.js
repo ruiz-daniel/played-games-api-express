@@ -54,17 +54,13 @@ module.exports.handler = {
       })
     if (!result?._id) {
       throw new Error('User not found')
-    } else if (result?._id) {
-      result = result.toJSON()
     }
     return result
   },
   async delete(id) {
-    let result = await userModel
-      .deleteOne({ _id: id })
-      .catch((error) => {
-        throw new Error('User not found')
-      })
+    let result = await userModel.deleteOne({ _id: id }).catch((error) => {
+      throw new Error('User not found')
+    })
     return result
   },
 }
