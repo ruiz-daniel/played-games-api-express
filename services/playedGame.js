@@ -16,6 +16,12 @@ module.exports.handler = {
     })
     return result
   },
+  async getByUser(user) {
+    const result = await playedGameModel.find(game => game.user === user).catch(error => {
+      throw new Error(error.message)
+    })
+    return result
+  },
   async create(playedGame) {
     const result = await playedGameModel.create(playedGame)
     return result
