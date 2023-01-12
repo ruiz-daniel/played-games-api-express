@@ -6,21 +6,22 @@ exports.getUsers = async (req, res, next) => {
 }
 
 exports.register = async (req, res, next) => {
-  const response = await userService.handler.register(req.body).catch(error => {
-    res.status(400)
-    return error.message
-  })
+  const response = await userService.handler
+    .register(req.body)
+    .catch((error) => {
+      res.status(400)
+      return error.message
+    })
   res.send(response)
 }
 
 exports.login = async (req, res, next) => {
-  const response = await userService.handler.login(
-    req.body.username,
-    req.body.password,
-  ).catch((error) => {
-    res.status(400)
-    return error.message
-  })
+  const response = await userService.handler
+    .login(req.body.username, req.body.password)
+    .catch((error) => {
+      res.status(400)
+      return error.message
+    })
   res.send(response)
 }
 

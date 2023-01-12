@@ -2,6 +2,7 @@ const mongoose = require('mongoose')
 const userModel = require('../models/user')
 
 const crypto = require('crypto')
+const jwt = require('jsonwebtoken')
 
 /**
  * @param {Object} user
@@ -24,6 +25,9 @@ module.exports.handler = {
       .catch((error) => {
         throw new Error('Invalid username or password')
       })
+
+    const token = generateAccessToken(username)
+    result._doc.token = token
 
     return result
   },
@@ -69,4 +73,8 @@ const getHashedPassword = (password) => {
   const sha256 = crypto.createHash('sha256')
   const hash = sha256.update(password).digest('base64')
   return hash
+}
+
+const generateAccessToken = (username) => {
+  return jwt.sign(username, process.env.TOKEN_SECRET)
 }
