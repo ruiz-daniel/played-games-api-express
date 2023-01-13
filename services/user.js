@@ -27,7 +27,7 @@ module.exports.handler = {
       })
 
     const token = generateAccessToken(result._doc)
-    result._doc.token = token
+    result._doc.access_token = token
 
     return result
   },
