@@ -10,7 +10,6 @@ module.exports.authenticateToken = (req, res, next) => {
     if (err) return res.sendStatus(403)
 
     req.user = user
-    console.log(req.user)
 
     next()
   })

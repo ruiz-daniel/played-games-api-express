@@ -26,7 +26,7 @@ module.exports.handler = {
         throw new Error('Invalid username or password')
       })
 
-    const token = generateAccessToken(username)
+    const token = generateAccessToken(result._doc)
     result._doc.token = token
 
     return result
@@ -75,6 +75,6 @@ const getHashedPassword = (password) => {
   return hash
 }
 
-const generateAccessToken = (username) => {
-  return jwt.sign(username, process.env.TOKEN_SECRET)
+const generateAccessToken = (user) => {
+  return jwt.sign(user, process.env.TOKEN_SECRET, {expiresIn: '24h'})
 }
