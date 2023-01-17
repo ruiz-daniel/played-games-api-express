@@ -46,7 +46,7 @@ exports.updatePlayedGame = async (req, res, next) => {
   res.send(response)
 }
 exports.deletePlayedGame = async (req, res, next) => {
-  const response = await playedGameService.handler.delete(req.body._id).catch(error => {
+  const response = await playedGameService.handler.delete(req.params.id).catch(error => {
     res.status(400)
     return error
   })
