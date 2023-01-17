@@ -31,7 +31,9 @@ module.exports.handler = {
     return result
   },
   async create(playedGame) {
-    const result = await playedGameModel.create(playedGame)
+    const result = await playedGameModel.create(playedGame).catch((error) => {
+      throw new Error(error.message)
+    })
     return result
   },
 }
