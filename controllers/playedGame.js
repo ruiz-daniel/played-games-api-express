@@ -38,3 +38,17 @@ exports.getPlayingGames = async (req, res, next) => {
   })
   res.send(response)
 }
+exports.updatePlayedGame = async (req, res, next) => {
+  const response = await playedGameService.handler.update(req.body).catch(error => {
+    res.status(400)
+    return error
+  })
+  res.send(response)
+}
+exports.deletePlayedGame = async (req, res, next) => {
+  const response = await playedGameService.handler.delete(req.body._id).catch(error => {
+    res.status(400)
+    return error
+  })
+  res.send(response)
+}

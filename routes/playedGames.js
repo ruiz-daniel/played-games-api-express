@@ -10,5 +10,7 @@ router.get('/:id', authenticate.authenticateToken, playedGameController.getPlaye
 router.get('/playing', authenticate.authenticateToken, playedGameController.getPlayingGames);
 router.get('/user/:userid', authenticate.authenticateToken, playedGameController.getPlayedGamesByUser);
 router.post('/', authenticate.authenticateToken, playedGameController.createPlayedGame);
+router.patch('/', authenticate.authenticateToken, playedGameController.updatePlayedGame);
+router.delete('/', authenticate.authenticateToken, playedGameController.deletePlayedGame);
 
 module.exports = router;

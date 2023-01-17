@@ -46,4 +46,21 @@ module.exports.handler = {
     })
     return result
   },
+  async update(playedGame) {
+    let result = await playedGameModel
+      .findByIdAndUpdate(playedGame, playedGame, { new: true })
+      .catch((error) => {
+          throw new Error(error.message)
+      })
+    if (!result?._id) {
+      throw new Error('Game not found')
+    }
+    return result
+  },
+  async delete(id) {
+    let result = await playedGameModel.deleteOne({ _id: id }).catch((error) => {
+      throw new Error('Game not found')
+    })
+    return result
+  },
 }
