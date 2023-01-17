@@ -1,5 +1,6 @@
 const mongoose = require('mongoose')
 const playedGameModel = require('../models/playedGame')
+const completionService = require('../services/completion')
 
 /**
  * @param {Object} playedGame
@@ -25,6 +26,15 @@ module.exports.handler = {
     const result = await playedGameModel
       .find({ user })
       .populate(['user', 'completion', 'platform'])
+      .catch((error) => {
+        throw new Error(error.message)
+      })
+    return result
+  },
+  async getPlayingGames(user) {
+    const completion = await completionService.handler.getByName('Playing')
+    const result = await playedGameModel
+      .find({ user, completion: completion._id  })
       .catch((error) => {
         throw new Error(error.message)
       })
