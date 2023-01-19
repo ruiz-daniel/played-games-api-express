@@ -47,6 +47,7 @@ module.exports.handler = {
     return result
   },
   async update(playedGame) {
+    playedGame.updated_at = new Date()
     let result = await playedGameModel
       .findByIdAndUpdate(playedGame, playedGame, { new: true })
       .catch((error) => {
