@@ -8,6 +8,7 @@ const playedGameSchema = new Schema({
   release_year: { type: String },
   played_year: String,
   genres: [String],
+  tags: [String],
   score: Number,
   description: String,
   steam_page: String,
