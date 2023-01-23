@@ -5,6 +5,16 @@ exports.getUsers = async (req, res, next) => {
   res.send(response)
 }
 
+exports.getUser = async (req, res, next) => {
+  const response = await userService.handler
+    .getById(req.params.id)
+    .catch((error) => {
+      res.status(400)
+      return error.message
+    })
+  res.send(response)
+}
+
 exports.register = async (req, res, next) => {
   const response = await userService.handler
     .register(req.body)

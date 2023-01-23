@@ -10,7 +10,13 @@ const jwt = require('jsonwebtoken')
  */
 module.exports.handler = {
   async get() {
-    const result = userModel.find({}, { password: 0 })
+    const result = await userModel.find({}, { password: 0 })
+    return result
+  },
+  async getById(userid) {
+    const result = await userModel.findById(userid).catch((error) => {
+      throw new Error('User not found')
+    })
     return result
   },
   async login(username, password) {
@@ -76,5 +82,5 @@ const getHashedPassword = (password) => {
 }
 
 const generateAccessToken = (user) => {
-  return jwt.sign(user, process.env.TOKEN_SECRET, {expiresIn: '24h'})
+  return jwt.sign(user, process.env.TOKEN_SECRET, { expiresIn: '24h' })
 }
