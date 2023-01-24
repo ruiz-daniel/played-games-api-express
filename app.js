@@ -1,4 +1,4 @@
-require('dotenv').config({path: './.env'});
+require('dotenv').config({ path: './.env' })
 var createError = require('http-errors')
 var express = require('express')
 var path = require('path')
@@ -10,13 +10,13 @@ var usersRouter = require('./routes/users')
 var platformsRouter = require('./routes/platforms')
 var completionsRouter = require('./routes/completions')
 var playedGamesRouter = require('./routes/playedGames')
+var favoriteListsRouter = require('./routes/favoriteLists')
 
 var app = express()
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'))
 app.set('view engine', 'pug')
-
 
 app.use(cors())
 
@@ -30,6 +30,7 @@ app.use('/users', usersRouter)
 app.use('/platforms', platformsRouter)
 app.use('/completions', completionsRouter)
 app.use('/playedGames', playedGamesRouter)
+app.use('/favoriteLists', favoriteListsRouter)
 
 const { connectDB } = require('./mongodb')
 
