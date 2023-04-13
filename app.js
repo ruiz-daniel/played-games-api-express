@@ -3,8 +3,18 @@ var createError = require('http-errors')
 var express = require('express')
 var path = require('path')
 var cookieParser = require('cookie-parser')
-var logger = require('morgan')
 const cors = require('cors')
+const multer = require("multer");
+
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, 'public/images')
+  },
+  filename: function (req, file, cb) {
+    cb(null, file.originalname)
+  }
+})
+const upload = multer({ storage: storage });
 
 var usersRouter = require('./routes/users')
 var platformsRouter = require('./routes/platforms')
@@ -14,17 +24,18 @@ var favoriteListsRouter = require('./routes/favoriteLists')
 
 var app = express()
 
-// view engine setup
-app.set('views', path.join(__dirname, 'views'))
-app.set('view engine', 'pug')
-
 app.use(cors())
+app.use(express.static('public'))
 
-app.use(logger('dev'))
 app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
 app.use(cookieParser())
 app.use(express.static(path.join(__dirname, 'public')))
+
+app.post("/images", upload.single("image"), uploadFiles);
+function uploadFiles(req, res) {
+  res.send("Successfully uploaded files");
+}
 
 app.use('/users', usersRouter)
 app.use('/platforms', platformsRouter)
@@ -47,7 +58,6 @@ app.use(function (err, req, res, next) {
 
   // render the error page
   res.status(err.status || 500)
-  res.render('error')
 })
 
 connectDB()
