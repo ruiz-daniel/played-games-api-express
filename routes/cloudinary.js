@@ -1,18 +1,8 @@
 const multer = require('multer')
 var authenticate = require('../authenticateMiddleware')
-
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, 'public/images')
-  },
-  filename: function (req, file, cb) {
-    cb(null, file.originalname)
-  },
-})
 const upload = multer()
-
 const express = require('express')
-var router = express.Router()
+let router = express.Router()
 
 const cloudinary = require('cloudinary').v2
 const streamifier = require('streamifier')
@@ -23,20 +13,6 @@ router.post(
   upload.single('image'),
   uploadFilesStream,
 )
-
-function uploadFiles(req, res) {
-  cloudinary.uploader
-    .upload(req.file.path, {
-      public_id: `${req.params.userid}/${req.file.filename}`,
-    })
-    .then((response) => {
-      res.send('Successfully uploaded files to', response.secure_url)
-    })
-    .catch((error) => {
-      console.log(error)
-      res.status(500).send('Error uploading file')
-    })
-}
 
 function uploadFilesStream(req, res, next) {
   let streamUpload = (req) => {
@@ -76,3 +52,28 @@ function removeFileExtension(fileName) {
 }
 
 module.exports = router
+
+// Unused alternate code
+
+// const storage = multer.diskStorage({
+//   destination: function (req, file, cb) {
+//     cb(null, 'public/images')
+//   },
+//   filename: function (req, file, cb) {
+//     cb(null, file.originalname)
+//   },
+// })
+
+// function uploadFiles(req, res) {
+//   cloudinary.uploader
+//     .upload(req.file.path, {
+//       public_id: `${req.params.userid}/${req.file.filename}`,
+//     })
+//     .then((response) => {
+//       res.send('Successfully uploaded files to', response.secure_url)
+//     })
+//     .catch((error) => {
+//       console.log(error)
+//       res.status(500).send('Error uploading file')
+//     })
+// }
