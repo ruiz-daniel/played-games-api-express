@@ -1,4 +1,5 @@
 const multer = require('multer')
+var authenticate = require('../authenticateMiddleware')
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -16,7 +17,12 @@ var router = express.Router()
 const cloudinary = require('cloudinary').v2
 const streamifier = require('streamifier')
 
-router.post('/:userid', upload.single('image'), uploadFilesStream)
+router.post(
+  '/:userid',
+  authenticate.authenticateToken,
+  upload.single('image'),
+  uploadFilesStream,
+)
 
 function uploadFiles(req, res) {
   cloudinary.uploader
@@ -37,7 +43,9 @@ function uploadFilesStream(req, res, next) {
     return new Promise((resolve, reject) => {
       let stream = cloudinary.uploader.upload_stream(
         {
-          public_id: `${req.params.userid}/${req.file.originalname}`,
+          public_id: `${req.params.userid}/${removeFileExtension(
+            req.file.originalname
+          )}`,
         },
         (error, result) => {
           if (result) {
@@ -60,6 +68,11 @@ function uploadFilesStream(req, res, next) {
   }
 
   upload(req)
+}
+
+function removeFileExtension(fileName) {
+  const index = fileName.indexOf('.')
+  return fileName.substring(0, index)
 }
 
 module.exports = router
