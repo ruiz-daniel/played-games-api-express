@@ -34,24 +34,29 @@ module.exports.handler = {
   async getPlayingGames(user) {
     const completion = await completionService.handler.getByName('Playing')
     const result = await playedGameModel
-      .find({ user, completion: completion._id  })
+      .find({ user, completion: completion._id })
+      .populate(['user', 'completion', 'platform'])
       .catch((error) => {
         throw new Error(error.message)
       })
     return result
   },
   async create(playedGame) {
-    const result = await playedGameModel.create(playedGame).catch((error) => {
-      throw new Error(error.message)
-    })
+    const result = await playedGameModel
+      .create(playedGame)
+      .populate(['user', 'completion', 'platform'])
+      .catch((error) => {
+        throw new Error(error.message)
+      })
     return result
   },
   async update(playedGame) {
     playedGame.updated_at = new Date()
     let result = await playedGameModel
       .findByIdAndUpdate(playedGame, playedGame, { new: true })
+      .populate(['user', 'completion', 'platform'])
       .catch((error) => {
-          throw new Error(error.message)
+        throw new Error(error.message)
       })
     if (!result?._id) {
       throw new Error('Game not found')
