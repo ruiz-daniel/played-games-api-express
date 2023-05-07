@@ -42,12 +42,12 @@ module.exports.handler = {
     return result
   },
   async create(playedGame) {
-    const result = await playedGameModel
+    const created = await playedGameModel
       .create(playedGame)
-      .populate(['user', 'completion', 'platform'])
       .catch((error) => {
         throw new Error(error.message)
       })
+    const result = await this.getById(created._id)
     return result
   },
   async update(playedGame) {
