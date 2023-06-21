@@ -22,13 +22,21 @@ module.exports.handler = {
       })
     return result
   },
-  async getByUser(user) {
-    const result = await playedGameModel
+  async getByUser(user, page = 1, limit = 50) {
+    const games = await playedGameModel
       .find({ user })
+      .limit(limit * page)
+      // .skip(limit * (page - 1))
       .populate(['user', 'completion', 'platform'])
       .catch((error) => {
         throw new Error(error.message)
       })
+    const max = await playedGameModel.count({user})
+    const result = {
+      games,
+      page,
+      max
+    }
     return result
   },
   async getPlayingGames(user) {

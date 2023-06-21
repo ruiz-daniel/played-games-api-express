@@ -31,7 +31,9 @@ module.exports.handler = {
       .catch((error) => {
         throw new Error('Invalid username or password')
       })
-
+    if (!result) {
+      throw new Error('Invalid username or password')
+    }
     const token = generateAccessToken(result._doc)
     result._doc.access_token = token
 
