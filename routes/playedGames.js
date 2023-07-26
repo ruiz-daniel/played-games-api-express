@@ -9,6 +9,7 @@ router.get('/', authenticate.authenticateToken, playedGameController.getPlayedGa
 router.get('/game/:id', authenticate.authenticateToken, playedGameController.getPlayedGamesById);
 router.get('/playing', authenticate.authenticateToken, playedGameController.getPlayingGames);
 router.get('/user/:userid/:page', authenticate.authenticateToken, playedGameController.getPlayedGamesByUser);
+router.get('/stats/:userid', authenticate.authenticateToken, playedGameController.getPlayedGamesStats)
 router.post('/', authenticate.authenticateToken, playedGameController.createPlayedGame);
 router.patch('/', authenticate.authenticateToken, playedGameController.updatePlayedGame);
 router.delete('/:id', authenticate.authenticateToken, playedGameController.deletePlayedGame);

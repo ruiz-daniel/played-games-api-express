@@ -49,6 +49,20 @@ module.exports.handler = {
       })
     return result
   },
+  async getStats(user) {
+    const games = await playedGameModel
+      .find({ user })
+      .populate(['completion', 'platform'])
+      .catch((error) => {
+        throw new Error(error.message)
+      })
+    try {
+      return compileStats(games)
+    } catch (error) {
+      throw new Error(`An Error has ocurred: ${error.message}`)
+    }
+    
+  },
   async create(playedGame) {
     const created = await playedGameModel
       .create(playedGame)
@@ -77,4 +91,84 @@ module.exports.handler = {
     })
     return result
   },
+}
+
+function compileStats(games) {
+  const totalGames = games.length
+  // const avgScore = games.reduce((game, currentValue) =>  currentValue += game.score ?? 6, 0) / totalGames 
+
+  let playedYearDatasets = {}
+  let yearDatasets = {}
+  let platformDatasets = {}
+  let scoreDatasets = {}
+  let genreDatasets = {}
+  let developerDataset = {}
+  let publisherDataset = {}
+  let completionDatasets = {}
+
+  games.forEach(element => {
+    // PLATFORMS
+    if (element.platform)
+      platformDatasets[element.platform.name] >= 1 
+        ? platformDatasets[element.platform.name]++
+        : platformDatasets[element.platform.name] = 1
+
+    // RELEASE YEARS
+    if (element.release_year)
+      yearDatasets[element.release_year.toString()] >= 1
+        ? yearDatasets[element.release_year.toString()]++
+        : yearDatasets[element.release_year.toString()] = 1
+
+    // PLAYED YEARS
+    if (element.played_year)
+      playedYearDatasets[element.played_year.toString()] >= 1
+        ? playedYearDatasets[element.played_year.toString()]++
+        : playedYearDatasets[element.played_year.toString()] = 1
+
+    // SCORES
+    if (element.score)
+      scoreDatasets[element.score.toString()] >= 1
+        ? scoreDatasets[element.score.toString()]++
+        : scoreDatasets[element.score.toString()] = 1
+
+    // GENRES
+      if (element.genres?.length) {
+        element.genres.forEach((genre) => {
+          genreDatasets[genre] >= 1 ? genreDatasets[genre]++ : genreDatasets[genre] = 1
+        })
+      }
+
+    // DEVELOPERS
+    if (element.developers?.length) {
+      element.developers.forEach((developer) => {
+        developerDataset[developer] >= 1 ? developerDataset[developer]++ : developerDataset[developer] = 1
+      })
+    }
+
+    // PUBLISHERS
+    if (element.publishers?.length) {
+      element.publishers.forEach((publisher) => {
+        publisherDataset[publisher] >= 1 ? publisherDataset[publisher]++ : publisherDataset[publisher] = 1
+      })
+    }
+
+    // COMPLETIONS
+    if (element.completion)
+      completionDatasets[element.completion.name] >= 1
+        ? completionDatasets[element.completion.name]++
+        : completionDatasets[element.completion.name] = 1
+  });
+
+  return {
+    totalGames,
+    completionDatasets,
+    platformDatasets,
+    developerDataset,
+    publisherDataset,
+    yearDatasets,
+    playedYearDatasets,
+    scoreDatasets,
+    genreDatasets
+  }
+
 }

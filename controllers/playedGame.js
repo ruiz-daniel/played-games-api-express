@@ -21,6 +21,13 @@ exports.getPlayedGamesByUser = async (req, res, next) => {
   })
   res.send(response)
 }
+exports.getPlayedGamesStats = async (req, res, next) => {
+  const response = await playedGameService.handler.getStats(req.user._id).catch(error => {
+    res.status(400)
+    return error
+  })
+  res.send(response)
+}
 exports.createPlayedGame = async (req, res, next) => {
   if (req.body) {
     req.body.user = req.user
