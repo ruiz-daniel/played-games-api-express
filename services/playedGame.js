@@ -29,7 +29,11 @@ module.exports.handler = {
         ...filterData
       })
       .limit(limit * page)
-      // .skip(limit * (page - 1))
+      .sort({
+        favorite: -1 ,
+        score: -1,
+        name: -1
+      })
       .populate(['user', 'completion', 'platform'])
       .catch((error) => {
         console.log(error)
