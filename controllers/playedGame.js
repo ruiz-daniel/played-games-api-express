@@ -15,7 +15,9 @@ exports.getPlayedGamesById = async (req, res, next) => {
   res.send(response)
 }
 exports.getPlayedGamesByUser = async (req, res, next) => {
-  const response = await playedGameService.handler.getByUser(req.user._id, req.params.page).catch(error => {
+  const response = await playedGameService.handler
+  .getByUser(req.user._id, req.query.page, req.query.limit, JSON.parse(req.query.filterData))
+  .catch(error => {
     res.status(400)
     return error
   })
