@@ -39,7 +39,7 @@ module.exports.handler = {
         console.log(error)
         throw new Error(error.message)
       })
-    const max = await playedGameModel.count({user})
+    const max = await playedGameModel.count({user, ...filterData})
     const result = {
       games,
       page,
