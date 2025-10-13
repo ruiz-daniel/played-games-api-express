@@ -11,6 +11,7 @@ var completionsRouter = require('./routes/completions')
 var playedGamesRouter = require('./routes/playedGames')
 var favoriteListsRouter = require('./routes/favoriteLists')
 let imagesRouter = require('./routes/cloudinary')
+let igdbRouter = require('./routes/igdb')
 
 var app = express()
 
@@ -28,6 +29,7 @@ app.use('/completions', completionsRouter)
 app.use('/playedGames', playedGamesRouter)
 app.use('/favoriteLists', favoriteListsRouter)
 app.use('/images', imagesRouter)
+app.use('/igdbApi', igdbRouter)
 
 const { connectDB } = require('./mongodb')
 
