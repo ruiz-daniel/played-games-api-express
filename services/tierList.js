@@ -1,5 +1,5 @@
 const mongoose = require('mongoose')
-const favoriteListModel = require('../models/favoriteList')
+const tierListModel = require('../models/tierList')
 
 /**
  * @param {Object} favoriteList
@@ -8,13 +8,13 @@ const favoriteListModel = require('../models/favoriteList')
 
 module.exports.handler = {
   async get(userid) {
-    const result = await favoriteListModel
+    const result = await tierListModel
       .find({ user: userid })
       .populate(['tiers'])
     return result
   },
   async getById(id) {
-    const result = await favoriteListModel
+    const result = await tierListModel
       .findById(id)
       .populate(['tiers'])
       .catch((error) => {
@@ -23,7 +23,7 @@ module.exports.handler = {
     return result
   },
   async create(favoriteList) {
-    const result = await favoriteListModel
+    const result = await tierListModel
       .create(favoriteList)
       .catch((error) => {
         throw new Error(error.message)
@@ -31,7 +31,7 @@ module.exports.handler = {
     return result
   },
   async update(favoriteList) {
-    let result = await favoriteListModel
+    let result = await tierListModel
       .findByIdAndUpdate(favoriteList, favoriteList, { new: true })
       .catch((error) => {
         throw new Error(error.message)
@@ -42,7 +42,7 @@ module.exports.handler = {
     return result
   },
   async delete(id) {
-    let result = await favoriteListModel
+    let result = await tierListModel
       .deleteOne({ _id: id })
       .catch((error) => {
         throw new Error('List not found')

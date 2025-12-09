@@ -1,7 +1,7 @@
-const favoriteListService = require('../services/favoriteList')
+const tierListService = require('../services/tierList')
 
 exports.getLists = async (req, res, next) => {
-  const response = await favoriteListService.handler
+  const response = await tierListService.handler
     .get(req.user?._id)
     .catch((error) => {
       res.status(400)
@@ -11,7 +11,7 @@ exports.getLists = async (req, res, next) => {
 }
 
 exports.getListById = async (req, res, next) => {
-  const response = await favoriteListService.handler
+  const response = await tierListService.handler
     .getById(req.params.id)
     .catch((error) => {
       res.status(400)
@@ -24,7 +24,7 @@ exports.createList = async (req, res, next) => {
   if (req.body) {
     req.body.user = req.user
   }
-  const response = await favoriteListService.handler
+  const response = await tierListService.handler
     .create(req.body)
     .catch((error) => {
       res.status(400)
@@ -34,7 +34,7 @@ exports.createList = async (req, res, next) => {
 }
 
 exports.updateList = async (req, res, next) => {
-  const response = await favoriteListService.handler
+  const response = await tierListService.handler
     .update(req.body)
     .catch((error) => {
       res.status(400)
@@ -44,7 +44,7 @@ exports.updateList = async (req, res, next) => {
 }
 
 exports.deleteList = async (req, res, next) => {
-  const response = await favoriteListService.handler
+  const response = await tierListService.handler
     .delete(req.params.id)
     .catch((error) => {
       res.status(400)
