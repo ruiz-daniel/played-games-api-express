@@ -152,7 +152,7 @@ function compileStats(games) {
         developerDataset[developer] >= 1 ? developerDataset[developer]++ : developerDataset[developer] = 1
       })
     }
-
+    
     // PUBLISHERS
     if (element.publishers?.length) {
       element.publishers.forEach((publisher) => {
@@ -166,6 +166,37 @@ function compileStats(games) {
         ? completionDatasets[element.completion.name]++
         : completionDatasets[element.completion.name] = 1
   });
+
+  // Comnbine mismatched case for developer names
+  try {
+    const developers = Object.keys(developerDataset)
+    const dataSetsToDelete = []
+    for (let indexA = 0; indexA < developers.length; indexA++) {
+      for (let indexB = indexA + 1; indexB < developers.length; indexB++) {
+        // Exclude studio Inc. from comparisons
+        if (developers[indexA] !== "Inc.") {
+          // If names are the same increase the first one and delete the second
+          if (developers[indexA].toLowerCase().replaceAll(' ', '') === developers[indexB].toLowerCase().replaceAll(' ', '')) {
+            developerDataset[developers[indexA]] += developerDataset[developers[indexB]]
+            dataSetsToDelete.push(developers[indexB])
+          } 
+          // If first one has many and includes the second
+          else if ((developers[indexA].includes('/') || developers[indexA].includes(' , ') || developers[indexA].includes('.')) && developers[indexA].toLowerCase().replaceAll(' ', '').includes(developers[indexB].toLowerCase().replaceAll(' ', ''))) {
+            developerDataset[developers[indexB]] += developerDataset[developers[indexA]]
+          } 
+          // If second contains first
+          else if ((developers[indexB].includes('/') || developers[indexB].includes(' , ') || developers[indexB].includes('.')) && developers[indexB].toLowerCase().replaceAll(' ', '').includes(developers[indexA].toLowerCase().replaceAll(' ', ''))) {
+            developerDataset[developers[indexA]] += developerDataset[developers[indexB]]
+          }
+        }
+      }
+    }
+    dataSetsToDelete.forEach(element => {
+      delete developerDataset[element]
+    });
+  } catch (error) {
+    console.log(error)
+  }
 
   return {
     totalGames,
