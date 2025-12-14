@@ -198,6 +198,37 @@ function compileStats(games) {
     console.log(error)
   }
 
+   // Comnbine mismatched case for publisher names
+  try {
+    const publishers = Object.keys(publisherDataset)
+    const dataSetsToDelete2 = []
+    for (let indexA = 0; indexA < publishers.length; indexA++) {
+      for (let indexB = indexA + 1; indexB < publishers.length; indexB++) {
+        // Exclude studio Inc. from comparisons
+        if (publishers[indexA] !== "Inc.") {
+          // If names are the same increase the first one and delete the second
+          if (publishers[indexA].toLowerCase().replaceAll(' ', '') === publishers[indexB].toLowerCase().replaceAll(' ', '')) {
+            publisherDataset[publishers[indexA]] += publisherDataset[publishers[indexB]]
+            dataSetsToDelete2.push(publishers[indexB])
+          } 
+          // If first one has many and includes the second
+          else if ((publishers[indexA].includes('/') || publishers[indexA].includes(' , ') || publishers[indexA].includes('.') || publishers[indexA].includes('Entertainment')) && publishers[indexA].toLowerCase().replaceAll(' ', '').includes(publishers[indexB].toLowerCase().replaceAll(' ', ''))) {
+            publisherDataset[publishers[indexB]] += publisherDataset[publishers[indexA]]
+          } 
+          // If second contains first
+          else if ((publishers[indexB].includes('/') || publishers[indexB].includes(' , ') || publishers[indexB].includes('.') || publishers[indexB].includes('Entertainment')) && publishers[indexB].toLowerCase().replaceAll(' ', '').includes(publishers[indexA].toLowerCase().replaceAll(' ', ''))) {
+            publisherDataset[publishers[indexA]] += publisherDataset[publishers[indexB]]
+          }
+        }
+      }
+    }
+    dataSetsToDelete2.forEach(element => {
+      delete publisherDataset[element]
+    });
+  } catch (error) {
+    console.log(error)
+  }
+
   return {
     totalGames,
     completionDatasets,
