@@ -24,7 +24,7 @@ exports.getPlayedGamesByUser = async (req, res, next) => {
   res.send(response)
 }
 exports.getPlayedGamesStats = async (req, res, next) => {
-  const response = await playedGameService.handler.getStats(req.user._id).catch(error => {
+  const response = await playedGameService.handler.getStats(req.user._id, JSON.parse(req.query.filterData)).catch(error => {
     res.status(400)
     return error
   })

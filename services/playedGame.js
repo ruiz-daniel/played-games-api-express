@@ -23,7 +23,7 @@ module.exports.handler = {
       })
     return result
   },
-  async getByUser(user, page = 1, limit = 50, filterData) {
+  async getByUser(user, page = 1, limit = 50, filterData = {}) {
     const filterDataCompletion = filterData.completion && await completionService.handler.getByName(filterData.completion)
     const filterDataPlatform = filterData.platform && await platformService.handler.getByName(filterData.platform)
     
@@ -63,9 +63,17 @@ module.exports.handler = {
       })
     return result
   },
-  async getStats(user) {
+  async getStats(user, filterData = {}) {
+    const filterDataCompletion = filterData.completion && await completionService.handler.getByName(filterData.completion)
+    const filterDataPlatform = filterData.platform && await platformService.handler.getByName(filterData.platform)
+    
+    if (filterDataCompletion) filterData.completion = filterDataCompletion
+    if (filterDataPlatform) filterData.platform = filterDataPlatform
     const games = await playedGameModel
-      .find({ user })
+      .find({ 
+        user,
+        ...filterData
+      })
       .populate(['completion', 'platform'])
       .catch((error) => {
         throw new Error(error.message)
@@ -230,6 +238,33 @@ function compileStats(games) {
     }
     dataSetsToDelete2.forEach(element => {
       delete publisherDataset[element]
+    });
+  } catch (error) {
+    console.log(error)
+  }
+
+  try {
+    const genres = Object.keys(genreDatasets)
+    const dataSetsToDelete2 = []
+    for (let indexA = 0; indexA < genres.length; indexA++) {
+      for (let indexB = indexA + 1; indexB < genres.length; indexB++) {
+        // If names are the same increase the first one and delete the second
+        if (genres[indexA].toLowerCase().replaceAll(' ', '') === genres[indexB].toLowerCase().replaceAll(' ', '')) {
+          genreDatasets[genres[indexA]] += genreDatasets[genres[indexB]]
+          dataSetsToDelete2.push(genres[indexB])
+        }
+      }
+    }
+    if (genreDatasets["Third Person Shooter"] >= 1 && genreDatasets["3rd Person Shooter"] >= 1) {
+      genreDatasets["Third Person Shooter"] += genreDatasets["3rd Person Shooter"]
+      delete genreDatasets["3rd Person Shooter"]
+    }
+    if (genreDatasets["First Person Shooter"] >= 1 && genreDatasets["1st Person Shooter"] >= 1) {
+      genreDatasets["First Person Shooter"] += genreDatasets["1st Person Shooter"]
+      delete genreDatasets["1st Person Shooter"]
+    } 
+    dataSetsToDelete2.forEach(element => {
+      delete genreDatasets[element]
     });
   } catch (error) {
     console.log(error)
