@@ -1,6 +1,7 @@
 const mongoose = require('mongoose')
 const playedGameModel = require('../models/playedGame')
 const completionService = require('../services/completion')
+const platformService = require('../services/platform')
 
 /**
  * @param {Object} playedGame
@@ -23,6 +24,11 @@ module.exports.handler = {
     return result
   },
   async getByUser(user, page = 1, limit = 50, filterData) {
+    const filterDataCompletion = filterData.completion && await completionService.handler.getByName(filterData.completion)
+    const filterDataPlatform = filterData.platform && await platformService.handler.getByName(filterData.platform)
+    
+    if (filterDataCompletion) filterData.completion = filterDataCompletion
+    if (filterDataPlatform) filterData.platform = filterDataPlatform
     const games = await playedGameModel
       .find({ 
         user,
