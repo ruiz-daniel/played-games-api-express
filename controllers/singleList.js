@@ -22,7 +22,7 @@ exports.getTierById = async (req, res, next) => {
 
 exports.createTier = async (req, res, next) => {
   const response = await singleListService.handler
-    .create(req.body)
+    .create({...req.body, user: req.user._id})
     .catch((error) => {
       res.status(400)
       return error
