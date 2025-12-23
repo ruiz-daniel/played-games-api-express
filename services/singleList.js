@@ -1,5 +1,6 @@
 const mongoose = require('mongoose')
 const singleListModel = require('../models/singleList')
+const { path } = require('../app')
 
 /**
  * @param {Object} favoriteListTier
@@ -10,7 +11,12 @@ module.exports.handler = {
   async get(userid) {
     const result = await singleListModel
       .find({ user: userid })
-      .populate('games')
+      .populate({
+        path: 'games',
+        populate: {
+          path: 'completion'
+        }
+      })
       .catch((error) => {
         throw new Error('Tiers not Found')
       })
@@ -18,7 +24,12 @@ module.exports.handler = {
   },
   async getById(id) {
     const result = await singleListModel.findById(id)
-    .populate('games')
+    .populate({
+        path: 'games',
+        populate: {
+          path: 'completion'
+        }
+      })
     .catch((error) => {
       throw new Error('Tier not Found')
     })
