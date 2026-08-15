@@ -38,4 +38,14 @@ module.exports.handler = {
     const data = response.data;
     return data;
   },
+  async getGameCoverImg(gameId, token) {
+    const response = await axios.request({
+      method: "post",
+      url: `${igdbUrl}/covers`,
+      data: `fields url; where game = ${gameId};`,
+      headers: getHeaders(token),
+    });
+    const data = response.data;
+    return data;
+  },
 };
