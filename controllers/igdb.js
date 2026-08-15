@@ -11,10 +11,11 @@ exports.getCredentials = async (req, res, next) => {
 
 exports.getByName = async (req, res, next) => {
   const name = req.params.name;
-  const bearerToken = req.params.access_token;
+  const bearerToken = req.query.access_token;
+  const limit = req.query.limit || 30;
   if (bearerToken && name) {
     const response = await igdbService.handler
-      .getByName(name, bearerToken)
+      .getByName(name, bearerToken, limit)
       .catch((error) => {
         res.status(400);
         return error;
