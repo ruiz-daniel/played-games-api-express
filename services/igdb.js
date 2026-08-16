@@ -42,7 +42,7 @@ module.exports.handler = {
     const response = await axios.request({
       method: "post",
       url: `${igdbUrl}/artworks`,
-      data: `fields url; where game = ${gameId};`,
+      data: `fields url, image_id; where game = ${gameId};`,
       headers: getHeaders(token),
     });
     const data = response.data;
