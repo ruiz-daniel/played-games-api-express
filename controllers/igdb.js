@@ -39,3 +39,18 @@ exports.getCoverImg = async (req, res, next) => {
   }
   res.status(400);
 };
+
+exports.getArtworks = async (req, res, next) => {
+  const gameId = req.params.gameId;
+  const bearerToken = req.query.access_token;
+  if (bearerToken && gameId) {
+    const response = await igdbService.handler
+      .getGameArtworks(gameId, bearerToken)
+      .catch((error) => {
+        res.status(400);
+        return error;
+      });
+    res.send(response);
+  }
+  res.status(400);
+};

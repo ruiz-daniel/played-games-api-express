@@ -48,4 +48,14 @@ module.exports.handler = {
     const data = response.data;
     return data;
   },
+  async getGameArtworks(gameId, token) {
+    const response = await axios.request({
+      method: "post",
+      url: `${igdbUrl}/artworks`,
+      data: `fields url, image_id; where game = ${gameId};`,
+      headers: getHeaders(token),
+    });
+    const data = response.data;
+    return data;
+  },
 };
