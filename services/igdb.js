@@ -41,7 +41,7 @@ module.exports.handler = {
   async getGameCoverImg(gameId, token) {
     const response = await axios.request({
       method: "post",
-      url: `${igdbUrl}/artworks`,
+      url: `${igdbUrl}/covers`,
       data: `fields url, image_id; where game = ${gameId};`,
       headers: getHeaders(token),
     });
