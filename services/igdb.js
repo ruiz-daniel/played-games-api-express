@@ -36,9 +36,12 @@ module.exports.handler = {
       headers: getHeaders(token),
     });
     const data = response.data;
-    if (data.cover) {
-      data.cover.url = data.cover.url.replace("t_thumb", "t_1080p");
-    }
+    data.forEach((game) => {
+      if (game.cover) {
+        game.cover.url = game.cover.url.replace("t_thumb", "t_1080p");
+        game.query = `fields ${getGameFields}; where (name ~ "${parsedName}" | name ~ "${name}") & (game_type = 0 | game_type = 10 | game_type = 9 | game_type = 8); limit ${limit};`;
+      }
+    });
     return data;
   },
   async getGameCoverImg(gameId, token) {
