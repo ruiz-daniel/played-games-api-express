@@ -32,14 +32,14 @@ module.exports.handler = {
     const response = await axios.request({
       method: "post",
       url: `${igdbUrl}/games`,
-      data: `fields ${getGameFields}; where (name ~ "${parsedName}" | name ~ "${name.replaceAll("%%", " ")}") & (game_type = 0 | game_type = 10 | game_type = 9 | game_type = 8); limit ${limit};`,
+      data: `fields ${getGameFields}; where (name ~ "${parsedName}" | name ~ "${name.replaceAll(" ", "%%")}") & (game_type = 0 | game_type = 10 | game_type = 9 | game_type = 8); limit ${limit};`,
       headers: getHeaders(token),
     });
     const data = response.data;
     data.forEach((game) => {
       if (game.cover) {
         game.cover.url = game.cover.url.replace("t_thumb", "t_1080p");
-        game.query = `fields ${getGameFields}; where (name ~ "${parsedName}" | name ~ "${name.replaceAll("%%", " ")}") & (game_type = 0 | game_type = 10 | game_type = 9 | game_type = 8); limit ${limit};`;
+        game.query = `fields ${getGameFields}; where (name ~ "${parsedName}" | name ~ "${name.replaceAll(" ", "%%")}") & (game_type = 0 | game_type = 10 | game_type = 9 | game_type = 8); limit ${limit};`;
       }
     });
     return data;
