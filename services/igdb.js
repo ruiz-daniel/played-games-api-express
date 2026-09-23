@@ -32,7 +32,7 @@ module.exports.handler = {
     const response = await axios.request({
       method: "post",
       url: `${igdbUrl}/games`,
-      data: `fields ${getGameFields}; where name ~ "${parsedName}" && game_type = 0; limit ${limit};`,
+      data: `fields ${getGameFields}; where name ~ "${parsedName}" & game_type = 0; limit ${limit};`,
       headers: getHeaders(token),
     });
     const data = response.data;
