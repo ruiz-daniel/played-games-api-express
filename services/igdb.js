@@ -29,7 +29,7 @@ module.exports.handler = {
   },
   async getByName(name, token, limit = 30) {
     const parsedName = `%${name.split(" ").join("%%")}%`;
-    const parsedSpaces = name.replaceAll(" ", "%%");
+    const parsedSpaces = `${name.split(" ").join("%%")}`;
     const response = await axios.request({
       method: "post",
       url: `${igdbUrl}/games`,
