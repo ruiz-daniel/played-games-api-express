@@ -13,9 +13,11 @@ exports.getByName = async (req, res, next) => {
   const name = req.params.name;
   const bearerToken = req.query.access_token;
   const limit = req.query.limit || 30;
+  const gameTypes = req.query.gameTypes;
+  const exact = req.query.exact;
   if (bearerToken && name) {
     const response = await igdbService.handler
-      .getByName(name, bearerToken, limit)
+      .getByName(name, bearerToken, limit, gameTypes, exact)
       .catch((error) => {
         res.status(400);
         return error;

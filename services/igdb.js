@@ -27,20 +27,25 @@ module.exports.handler = {
     const { access_token, expires_in, token_type } = response.data;
     return { access_token, expires_in, token_type };
   },
-  async getByName(name, token, limit = 30) {
+  async getByName(
+    name,
+    token,
+    limit = 50,
+    gameTypes = [0, 10, 9, 8],
+    exact = false,
+  ) {
     const parsedName = `%${name.split(" ").join("%%")}%`;
     const parsedSpaces = `${name.split(" ").join("%%")}`;
     const response = await axios.request({
       method: "post",
       url: `${igdbUrl}/games`,
-      data: `fields ${getGameFields}; where (name ~ "${parsedName}" | name ~ "${parsedSpaces}") & (game_type = 0 | game_type = 10 | game_type = 9 | game_type = 8); limit ${limit};`,
+      data: `fields ${getGameFields}; where (name ~ "${exact ? parsedSpaces : parsedName}" | name ~ "${parsedSpaces}") & (game_type = ${gameTypes.join(" | ")}); limit ${limit};`,
       headers: getHeaders(token),
     });
     const data = response.data;
     data.forEach((game) => {
       if (game.cover) {
         game.cover.url = game.cover.url.replace("t_thumb", "t_1080p");
-        game.query = `fields ${getGameFields}; where (name ~ "${parsedName}" | name ~ "${parsedSpaces}") & (game_type = 0 | game_type = 10 | game_type = 9 | game_type = 8); limit ${limit};`;
       }
     });
     return data;
