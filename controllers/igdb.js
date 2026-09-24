@@ -17,7 +17,7 @@ exports.getByName = async (req, res, next) => {
   const exact = req.query.exact;
   if (bearerToken && name) {
     const response = await igdbService.handler
-      .getByName(name, bearerToken, limit, gameTypes, exact)
+      .getByName(name, bearerToken, limit, gameTypes, exact === "true")
       .catch((error) => {
         res.status(400);
         return error;
