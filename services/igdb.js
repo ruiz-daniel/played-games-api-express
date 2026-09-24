@@ -53,6 +53,7 @@ module.exports.handler = {
       if (game.cover) {
         game.cover.url = game.cover.url.replace("t_thumb", "t_1080p");
       }
+      game.query = `fields ${getGameFields}; where ${gameNameQuery} & (${gameTypesQuery}); limit ${limit};`;
     });
     return data;
   },
