@@ -36,10 +36,16 @@ module.exports.handler = {
   ) {
     const parsedName = `%${name.split(" ").join("%%")}%`;
     const parsedSpaces = `${name.split(" ").join("%%")}`;
+    const gameTypesQuery = gameTypes
+      .map((type) => `game_type = ${type}`)
+      .join(" | ");
+    const gameNameQuery = exact
+      ? `(name ~ "${parsedSpaces}")`
+      : `(name ~ "${parsedName}" | name ~ "${parsedSpaces}")`;
     const response = await axios.request({
       method: "post",
       url: `${igdbUrl}/games`,
-      data: `fields ${getGameFields}; where (name ~ "${exact ? parsedSpaces : parsedName}" | name ~ "${parsedSpaces}") & (game_type = ${gameTypes.join(" | ")}); limit ${limit};`,
+      data: `fields ${getGameFields}; where ${gameNameQuery} & (${gameTypesQuery}); limit ${limit};`,
       headers: getHeaders(token),
     });
     const data = response.data;
